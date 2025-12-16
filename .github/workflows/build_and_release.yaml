@@ -13,12 +13,12 @@ env:
 jobs:
   fetch-aseprite-info:
     name: Fetch deps info
-    runs-on: ubuntu-latest
-    outputs:
+运行于: ubuntu-latest
+输出:
       download-link: ${{ steps.aseprite-link.outputs.download-link }}
       release-tag: ${{ steps.aseprite-link.outputs.release-tag }}
     steps:
-      - name: Fetch Aseprite release link
+      - name: 获取Aseprite发布链接
         id: aseprite-link
         uses: a1393323447/fetch-release@main
         with:
@@ -27,34 +27,34 @@ jobs:
             match: Aseprite-.*?-Source.zip
 
   create-release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: fetch-aseprite-info
-    permissions:
-      contents: write
-    outputs:
+名称: 创建发布
+运行于: ubuntu-latest
+需要: 获取Aseprite信息
+权限:
+内容: 写入
+输出:
       download-link: ${{ needs.fetch-aseprite-info.outputs.download-link }}
       release-tag: ${{ needs.fetch-aseprite-info.outputs.release-tag }}
     steps:
       - uses: actions/checkout@v2
       - uses: ncipollo/release-action@v1
         with:
-          tag: ${{ needs.fetch-aseprite-info.outputs.release-tag }}
-          body: Aseprite-${{ needs.fetch-aseprite-info.outputs.release-tag }}
+$needs.fetch-aseprite-info.outputs.release-tag}
+正文: Aseprite-${{needs.fetch-aseprite-info.outputs.release-tag}
           skipIfReleaseExists: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+$secrets.GITHUB_TOKEN
 
   build-aseprite:
     name: Build Aseprite
     needs: create-release
-    permissions:
-      contents: write
+权限:
+内容: 写入
     runs-on: ${{ matrix.os }}
     strategy:
         matrix:
-          os: [ windows-latest, ubuntu-latest, macOS-latest ]
+          os: [ windows-latest ]
         fail-fast: false
-    steps:
+步骤:
       - name: Install Dependencies
         if: runner.os == 'Linux'
         shell: bash
